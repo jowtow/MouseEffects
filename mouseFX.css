@@ -1,0 +1,9 @@
+div.cursor{
+    position: absolute;
+    width: 18px;
+}
+div.explodeNode{
+    display: inline-block;    
+    position: absolute;
+    width: 18px;
+}
