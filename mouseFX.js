@@ -1,11 +1,17 @@
 let body;
-let explodeDistance = 20;
+let explodeDistance = 100;
+let explodeSpeed = 30;
 let explodeLag = 10;
-let explodeClearLag = 500;
+let explodeClearLag = 100;
 let explodeArms = 20;
-let explodeSpeed = 10;
+let explodeChrapnelSize = 20;
+let explodeChrapnelSizeFudge = 0;
+let explodeCharacter = 'Jack';
 
-let followClearLag = 200;
+let useRandomColor = true;
+let color = "red";
+
+let followClearLag = 300;
 
 let mouseSVG = `<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
@@ -15,7 +21,7 @@ let mouseSVG = `<?xml version="1.0" encoding="utf-8"?>
 </svg>`
 document.addEventListener("DOMContentLoaded", () => {
     document.addEventListener("mousemove", (e) => { moveMouseFX(e) });
-    document.body.addEventListener("click", (e) => { mouseClickFX(e) },true);
+    document.body.addEventListener("click", (e) => { mouseClickFX(e) },false);
     body = document.querySelector("body");
 });
 
@@ -35,7 +41,10 @@ function moveMouseFX(e) {
     cursorDiv.style.left = mouseLeft;
     cursorDiv.style.top = mouseTop;
     let path = cursorDiv.querySelector("path");
-    path.style = `fill: ${getRandomColor()}`;
+    if(useRandomColor)
+        path.style = `fill: ${getRandomColor()}`;
+    else
+        path.style = `fill: ${color}`;
     body.appendChild(cursorDiv);
     setTimeout(()=>{body.removeChild(cursorDiv)},followClearLag);
 }
@@ -43,9 +52,13 @@ function moveMouseFX(e) {
 function updateExplodeNode(x,y,dx,dy,i){
     if(i < explodeDistance){
         let div = document.createElement("div");
-        div.innerHTML = '*';
+        div.innerHTML = explodeCharacter;
+        let rand = Math.floor(Math.random()*explodeChrapnelSizeFudge) - explodeChrapnelSizeFudge/2;
         div.classList.add("explodeNode");
-        div.style = `color: ${getRandomColor()}`;
+        if(useRandomColor)
+            div.style = `color: ${getRandomColor()};font-size:${explodeChrapnelSize + rand}px;`;
+        else
+            div.style = `color: ${color};font-size:${explodeChrapnelSize + rand}px;`;
         div.style.left = x + dx;
         div.style.top = y + dy;
         body.appendChild(div);
